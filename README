@@ -1,3 +1,20 @@
 Lending Club Backtester
 
-A genetic algorithm to find ideal search filters for investing at lendingclub.com
+Implements a genetic algorithm to find ideal search filters for investing at 
+lendingclub.com. See corresponding blog post for more information:
+http://blog.dmpatierno.com/post/3161338411/lending-club-genetic-algorithm
+
+The code is kinda sloppy, but maybe someone will find it useful.
+
+Requires LoanStats.csv present in the working directory (download from
+https://www.lendingclub.com/info/download-data.action).
+
+Usage:
+
+To run the genetic algorithm:
+> php lcbt.php
+
+To test a single filter set:
+> php lcbt.php ,,,,,,,,,,,,,
+> php lcbt.php 4,,2,,0,3,4,170,0,0,12,0,,
+
