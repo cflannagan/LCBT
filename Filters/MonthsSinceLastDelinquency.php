@@ -10,7 +10,7 @@ class MonthsSinceLastDelinquency extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if ($loan["Months Since Last Delinquency"] < $current)
+      if ($loan["mths_since_last_delinq"] < $current)
          return false;
       return true;
    }

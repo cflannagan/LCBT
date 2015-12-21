@@ -10,7 +10,7 @@ class WordsInDescription extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      $words = str_word_count($loan['Loan Description']);
+      $words = str_word_count($loan['desc']);
       if ($words < $current)
          return false;
       return true;

@@ -21,17 +21,17 @@ class State extends Filter {
    }
 
    public function apply($loan) {
-      if (is_null($loan["State"]))
-         $loan["State"] = "NULL";
+      if (is_null($loan["addr_state"]))
+         $loan["addr_state"] = "NULL";
 
       $current = $this->options[$this->current];
 
       if (is_array($current)) {
-         if (in_array($loan["State"], $current))
+         if (in_array($loan["addr_state"], $current))
             return false;
       }
       else {
-         if ($loan["State"] == $current)
+         if ($loan["addr_state"] == $current)
             return false;
       }
 

@@ -7,7 +7,7 @@ class RevolvingLineUtilization extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if (substr($loan["Revolving Line Utilization"], 0, -1) > $current)
+      if (substr($loan["revol_util"], 0, -1) > $current)
          return false;
       return true;
    }

@@ -6,7 +6,7 @@ class TotalCreditLines extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if ($loan["Total CREDIT Lines"] > $current)
+      if ($loan["total_acc"] > $current)
          return false;
       return true;
    }

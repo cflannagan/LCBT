@@ -8,7 +8,7 @@ class Inquiries extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if ($loan["Inquiries in the Last 6 Months"] > $current)
+      if ($loan["inq_last_6mths"] > $current)
          return false;
       return true;
    }

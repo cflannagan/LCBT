@@ -23,7 +23,7 @@ class LoanPurpose extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if (!in_array($loan["Loan Purpose"], $current))
+      if (!in_array($loan["purpose"], $current))
          return false;
       return true;
    }

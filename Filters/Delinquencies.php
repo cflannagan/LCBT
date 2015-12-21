@@ -13,7 +13,7 @@ class Delinquencies extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if (!in_array($loan["Delinquencies (Last 2 yrs)"], $current))
+      if (!in_array($loan["delinq_2yrs"], $current))
          return false;
       return true;
    }

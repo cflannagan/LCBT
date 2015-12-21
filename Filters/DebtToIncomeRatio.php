@@ -7,7 +7,7 @@ class DebtToIncomeRatio extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if (substr($loan["Debt-To-Income Ratio"], 0, -1) > $current)
+      if (substr($loan["dti"], 0, -1) > $current)
          return false;
       return true;
    }

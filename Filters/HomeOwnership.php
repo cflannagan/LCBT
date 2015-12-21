@@ -16,11 +16,11 @@ class HomeOwnership extends Filter {
    }
 
    public function apply($loan) {
-      if (is_null($loan["Home Ownership"]))
-         $loan["Home Ownership"] = "NULL";
+      if (is_null($loan["home_ownership"]))
+         $loan["home_ownership"] = "NULL";
 
       $current = $this->options[$this->current];
-      if ($loan["Home Ownership"] == $current)
+      if ($loan["home_ownership"] == $current)
          return false;
       return true;
    }

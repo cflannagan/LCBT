@@ -9,7 +9,7 @@ class EarliestCreditLine extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      $ecl = (time() - strtotime($loan["Earliest CREDIT Line"]))
+      $ecl = (time() - strtotime($loan["earliest_cr_line"]))
        / 60 / 60 / 24 / 365;
       if ($ecl < $current)
          return false;

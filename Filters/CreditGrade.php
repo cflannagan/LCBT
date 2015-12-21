@@ -36,7 +36,7 @@ class CreditGrade extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if (!preg_match("/^[{$current}]/", $loan["CREDIT Grade"]))
+      if (!preg_match("/^[{$current}]/", $loan["grade"]))
          return false;
       return true;
    }

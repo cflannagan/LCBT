@@ -8,7 +8,7 @@ class PublicRecordsOnFile extends Filter {
    }
 
    public function apply($loan) {
-      return !$loan["Public Records On File"];
+      return !$loan["pub_rec"];
    }
 }
 ?>

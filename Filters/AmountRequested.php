@@ -8,7 +8,7 @@ class AmountRequested extends Filter {
 
    public function apply($loan) {
       $current = $this->options[$this->current];
-      if ($loan["Amount Requested"] > $current)
+      if ($loan["loan_amnt"] > $current)
          return false;
       return true;
    }

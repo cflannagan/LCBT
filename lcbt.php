@@ -210,7 +210,7 @@ class LCBT {
          
          if ($invest) {
             $invested[] = $loan;
-            $statuses[$loan["Status"]]++;
+            $statuses[$loan["loan_status"]]++;
          }
       }
 
@@ -222,19 +222,19 @@ class LCBT {
       $profit = $principal = $defaulted = $lost = 0;
 
       foreach ($invested as $loan) {
-         $elapsed = floor(($time - strtotime($loan["Issued Date"])) / 86400 / 30);
-         $balance = $loan["Amount Borrowed"];
+         $elapsed = floor(($time - strtotime($loan["issue_d"])) / 86400 / 30);
+         $balance = $loan["funded_amnt"];
          $ratio = 25 / $balance;
          $payments = 0;
 
          while ($elapsed-- > 0) {
             // Interest and service charge for the whole loan (not just me)
-            $interest = (substr($loan["Interest Rate"], 0, -1) / 1200) * $balance;
-            $service = 0.01 * $loan["Monthly PAYMENT"];
-            $payments += $loan["Monthly PAYMENT"];
+            $interest = (substr($loan["int_rate"], 0, -1) / 1200) * $balance;
+            $service = 0.01 * $loan["installment"];
+            $payments += $loan["installment"];
 
             $default = self::defaultedAmount($loan);
-            if ($default && $payments > $loan["Payments To Date"]) {
+            if ($default && $payments > $loan["total_pymnt"]) {
                $profit -= $default * $ratio;
                $lost += $default * $ratio;
                $defaulted++;
@@ -245,7 +245,7 @@ class LCBT {
             $profit += (($interest - $service) * $ratio);
             $principal += ($balance * $ratio);
 
-            $balance -= $loan["Monthly PAYMENT"];
+            $balance -= $loan["installment"];
          }
       }
 
@@ -257,7 +257,7 @@ class LCBT {
       $nar = @number_format(pow(1 + $profit / $principal, 12) - 1, 4) * 100;
 
       foreach ($invested as $loan)
-         $rate += substr($loan["Interest Rate"], 0, -1);
+         $rate += substr($loan["int_rate"], 0, -1);
 
       $expect = @number_format($rate / count($invested), 2);
 
@@ -270,7 +270,7 @@ class LCBT {
       // Count loan volume.
       $per_month = 0;
       foreach ($invested as $loan) {
-         if (substr($loan['Issued Date'], 0, 7) == '2010-09')
+         if (substr($loan['issue_d'], 0, 7) == '2010-09')
             $per_month++;
       }
 
@@ -287,8 +287,8 @@ class LCBT {
    }
 
    public static function defaultedAmount($loan) {
-      if (in_array($loan["Status"], array("Charged Off", "Default")))
-         return ($loan["Amount Borrowed"] - $loan["Payments To Date"]);
+      if (in_array($loan["loan_status"], array("Charged Off", "Default")))
+         return ($loan["funded_amnt"] - $loan["total_pymnt"]);
       return 0;
    }
 
@@ -308,22 +308,25 @@ class LCBT {
       for ($c=0; $c<$cols; $c++)
          $loan[self::$labels[$c]] = $data[$c];
 
-      if (!$loan["Status"] || !$loan["Amount Borrowed"])
+      if (!$loan["loan_status"] || !$loan["funded_amnt"])
          return false;
 
       // Only look at loans >3 months old
-      if (!preg_match("/^2\d{3}-\d{2}-\d{2}$/", $loan["Issued Date"]))
+      if (!preg_match("/^[a-zA-Z]{3}-\d{4}$/", $loan["issue_d"]))
          return false;
-      if (strtotime($loan["Issued Date"]) > time() - 86400*30*3)
+      if (strtotime($loan["issue_d"]) > time() - 86400*30*3)
          return false;
       // Ignore loans that didn't even start
-      if (in_array($loan["Status"], array("Removed", "Expired")))
+      // Seems to be outdated filter but won't hurt to leave this in "just in case"
+      if (in_array($loan["loan_status"], array("Removed", "Expired")))
+      // Ignore loans that doesn't meet LC credit policy
+      if (preg_match("/does not meet the/", $loan["loan_status"]))
          return false;
       return $loan;
    }
 
    public static function getLabels($data) {
-      if (++self::$row == 2) {
+      if (++self::$row == 1) {
          self::$labels = array();
          $cols = count($data);
          for ($c=0; $c<$cols; $c++)
